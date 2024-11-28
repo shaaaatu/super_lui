@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>Macci Api Requester</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="w-screen h-screen bg-gray-300 flex justify-center items-center">
+	<div class="bg-gray-300 w-[25%] h-[60%] rounded-md shadow-md shadow-gray-400">
+		<div class="text-center py-8">
+			<h1 class="text-4xl font-bold">Super API</h1>
+		</div>
+		<form action="api.php" method="POST">
+			<div class="flex flex-col items-center *:my-2 *:h-[45px] *:w-[80%] *:rounded-full *:bg-gray-300 *:shadow-inner *:shadow-gray-400 *:px-[30px]">
+				<input type="text" name="request_type" id="data" placeholder="Request Type">
+				<input type="text" name="request_ssid" id="data" placeholder="Request SSID">
+				<input type="text" name="request_data" id="data" placeholder="Request Data">
+			</div>
+			<div class="flex justify-center">
+				<div class="w-[80%]">not sure?</div>
+			</div>
+			<div class="flex my-5 w-full justify-center">
+				<button type="submit" name="datasubmit" class="w-[80%] h-[45px] rounded-full bg-gray-300 shadow-md shadow-gray-400 text-center">Request</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
