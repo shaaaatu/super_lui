@@ -25,26 +25,39 @@ function isFullyPermission($request_type, $auth, $commands)
 /* init variable */
 /* check if super-request or not */
 /* check if request_type defined */
+error_log("\n\n-----------------------------------\ncheck request_type is not empty");
 if (empty($_POST['request_type']))
 	return ("there is no request_type");
+error_log("get request_type/data");
 $request_type = $_POST['request_type'];
+$request_data= json_decode($_POST['request_data']);
 /* connect db */
-$db = new mysqli($host, $user, $password, $dbname);
+error_log("connect mysqli");
+$db = new mysqli($host, $dbuser, $dbpassword, $dbname);
+if ($db->connect_error)
+	die("Connection failed: " . $db->connect_error);
+else
+	echo "Connected successfully!";
+
 /* get session id */
+error_log("get ssid");
 $ssid = getSsid();
 /* login related operations based on ssid */
 /* I need take user_id, request_permission from authentication*/
+error_log("authentication");
 $auth = new Authentication($db, $ssid);
 $auth->authenticate();
 echo "id: " . $auth->getRequestId() . "<br>";
 echo "permission: " . $auth->getRequestPermission() . "<br>";
 /* check permission */
+error_log("check permission");
 if (!isFullyPermission($request_type, $auth, $commands))
 	exit();
 /* excecute based on type */
-$result = excecuteRequest($request_type);
+error_log("execute request");
+$result = executeRequest($request_type);
 /* output result */
 $apiresult = json_encode($result, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) ;
 echo "<br>result: $apiresult";
-
+error_log("done\n--------------------------------------------------------------\n");
 ?>

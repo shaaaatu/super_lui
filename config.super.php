@@ -1,13 +1,13 @@
 <?php
 $service = array(
-	/* "login"=>"local" , */
+	"login"=>"local" ,
 	/* "category"=>"local" , */
 	/* "image"=>"local" , */
 	"test"=>"local" ,
 	/* "example"=>"local" , */
 
 	/* "admin"=>"local" , */ 
-	/* "user"=>"local" , */ 
+	"user"=>"local" , 
 	/* "view"=>"local" , */ 
 	/* "search"=>"local" , */
 	/* "contracts"=>"local" , */
@@ -15,11 +15,20 @@ $service = array(
 
 );
 
+	$login = [
+		'login',
+		"gen_token",
+	];
+
 	$test = [
 		"hello"  ,
 		"check_login" ,
 		'read_log' ,
 		'check_db' ,
+	];
+
+	$user = [
+		'create_user'
 	];
 
 //Permissions
@@ -78,6 +87,7 @@ $service = array(
 		"search_by_freetext" ,
 
 		// user
+		"create_user",
 		"register" ,
 		"reset_password_1" ,
 		"reset_password_2" ,
