@@ -9,7 +9,7 @@ $service = array(
 	/* "admin"=>"local" , */ 
 	"user"=>"local" , 
 	/* "view"=>"local" , */ 
-	/* "search"=>"local" , */
+	"search"=>"local" ,
 	/* "contracts"=>"local" , */
 	// "critikerapi"=>"https://www.critiker.com/critiker.api.php" ,
 
@@ -31,6 +31,29 @@ $service = array(
 		'create_user'
 	];
 
+	$search = [
+		'search'
+	];
+
+	$commands[1] = [
+		//test API
+		'hello' ,
+		'check_login',
+
+		//login
+		'logout' ,
+		'logout_all' ,
+		'add_category' ,
+
+		//test API
+		'only_paying_users' ,
+		'extract' , 
+
+		//search
+		'search',
+	];
+
+
 //Permissions
 	$commands[50] = [
 		//test API
@@ -45,6 +68,9 @@ $service = array(
 		//test API
 		'only_paying_users' ,
 		'extract' , 
+
+		//search
+		'search',
 	];
 
 

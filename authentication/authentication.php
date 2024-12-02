@@ -19,16 +19,20 @@ class Authentication
 	{
 		$row = $this->getSessionData();
 		/* $this->data = $row; */
-		echo "row: " . $row . "<br>";
+		var_dump($row);
+		echo "<br>";
 		if ($this->isRowEmpty($row))
-			return ;
+			return false;
 		if ($this->isSessionExpired($row['lastused']))
 		{
+			echo "session expired";
 			$this->logout($row['id']);
 			return false;
 		}
+		var_dump($row['users_permission']);
+		echo "<br>";
 		$this->updateLastusedTime($row['id']);
-		$this->permission = $row['permission'];
+		$this->permission = $row['users_permission'];
 		return true;
 	}
 
@@ -63,13 +67,13 @@ class Authentication
 
 	private function updateLastUsedTime($userId)
 	{
-		$sql = "UPDATE logins SET lastused = NOW() WHERE m_users_id = '{$userId}'";
+		$sql = "UPDATE logins SET lastused = NOW() WHERE users_id = '{$userId}'";
 		$this->db->query($sql);
 	}
 
 	private function logout($userId)
 	{
-		$sql = "UPDATE logins SET valid = 0, logoutdatetime = NOW() WHERE m_users_id = '{$userId}'";
+		$sql = "UPDATE logins SET valid = 0, logoutdatetime = NOW() WHERE users_id = '{$userId}'";
 		$this->db->query($sql);
 	}
 

@@ -27,5 +27,6 @@ $sql = "INSERT INTO logins
 	VALUE (?, NOW(), NOW(), NULL, 1, ?, ?, ?)";
 $stmt = $db->prepare($sql);
 $stmt->execute([$token, $row['id'], $row['uuid'], $row['permission']]);
+setcookie("SSID", $token, time() + 200000, '/', false, true);
 echo "login successfully!!!<br>";
 ?>
