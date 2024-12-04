@@ -17,20 +17,18 @@ class Authentication
 
 	public function authenticate()
 	{
+		global $t;
+
 		$row = $this->getSessionData();
 		/* $this->data = $row; */
-		var_dump($row);
-		echo "<br>";
 		if ($this->isRowEmpty($row))
 			return false;
 		if ($this->isSessionExpired($row['lastused']))
 		{
-			echo "session expired";
+			$t->log("session expired");
 			$this->logout($row['id']);
 			return false;
 		}
-		var_dump($row['users_permission']);
-		echo "<br>";
 		$this->updateLastusedTime($row['id']);
 		$this->permission = $row['users_permission'];
 		return true;
@@ -38,11 +36,13 @@ class Authentication
 
 	private function getSessionData()
 	{
+		global $t;
+
 		$sql = "SELECT * FROM logins WHERE token = '{$this->ssid}' AND valid = 1";
 		$result = $this->db->query($sql);
 		if (!$result)
 		{
-			echo "SQL failed";
+			$t->log("SQL failed");
 			exit();
 		}
 		return $result->fetch_assoc();
@@ -50,9 +50,11 @@ class Authentication
 
 	private function isRowEmpty($row)
 	{
+		global $t;
+
 		if (empty($row))
 		{
-			echo "permission unchanged<br>";
+			$t->log("permission unchanged");
 			return true;
 		}
 		return false;
