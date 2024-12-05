@@ -24,45 +24,64 @@ function isFullyPermission($request_type, $auth, $commands)
 	}
 }
 
-/* is request_type defined */
+function connectDB()
+{
+	global $host;
+	global $dbuser;
+	global $dbpassword;
+	global $dbname;
+	global $t;
+
+	$db = new mysqli($host, $dbuser, $dbpassword, $dbname);
+	if ($db->connect_error)
+	{
+		outputResult([], $t->logs);
+		exit(0);
+	}
+	$t->log("connected successfully!");
+	return ($db);
+}
+
+function outputResult($result, $logs)
+{
+	global $request_data;
+
+	if ($request_data->test)
+		$apiresult = $result;
+	else if ($request_data->debug)
+		$result = array('verbose' => $logs) + $result;
+	if (!$request_data->test)
+		$apiresult = json_encode($result, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+	echo "$apiresult";
+}
+
 /* init variable */
 /* check if super-request or not */
 /* check if request_type defined */
+$request_data = NULL;
 $t->log("check request type");
+
 if (empty($_POST['request_type']))
 	return ("there is no request_type");
-
 $request_type = $_POST['request_type'];
 $request_data= json_decode($_POST['request_data']);
-
-/* connect db */
-$db = new mysqli($host, $dbuser, $dbpassword, $dbname);
-if ($db->connect_error)
-	exit("Connection failed: " . $db->connect_error);
-else
-	$t->log("Connected successfully!");
-
-/* get session id */
+$db = connectDB();
 $ssid = getSsid();
-$t->log("ssid: $ssid");
-
-/* login related operations based on ssid */
-/* I need take user_id, request_permission from authentication*/
-$auth = new Authentication($db, $ssid);
-if (!$auth->authenticate())
-	exit();
-
-/* check permission */
+$auth = Authentication::getInstance($db, $ssid);
+$auth->authenticate();
 if (!isFullyPermission($request_type, $auth, $commands))
+{
+	$t->log("not fully permission");
+	outputResult([], $t->logs);
 	exit();
+}
 
-/* excecute based on type */
-$result = [];
-$result[$request_type] = executeRequest($request_type);
-
-/* output result */
-if ($request_data->debug)
-	$result = array('verbose' => $t->logs) + $result;
-$apiresult = json_encode($result, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
-echo "<pre>$apiresult</pre>";
+if ($request_data->test)
+	$result = executeRequest($request_type);
+else
+{
+	$result = [];
+	$result[$request_type] = executeRequest($request_type);
+}
+outputResult($result, $t->logs);
 ?>

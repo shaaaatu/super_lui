@@ -1,7 +1,7 @@
 <?php
 if (!((isset($request_data->username) || isset($request_data->email)) && isset($request_data->password)))
 {
-	echo "email or password not set <br>";
+	echo "email or password not set";
 	exit();
 }
 $email = $request_data->email;
@@ -17,9 +17,14 @@ if (!$result)
 	exit();
 }
 $row = $result->fetch_assoc();
+if (empty($row))
+{
+	echo "email is not correct";
+	exit();
+}
 if (!password_verify($password, $row['password']))
 {
-	echo "password is not correct<br>";
+	echo "password is not correct";
 	exit();
 }
 $sql = "INSERT INTO logins
@@ -28,5 +33,5 @@ $sql = "INSERT INTO logins
 $stmt = $db->prepare($sql);
 $stmt->execute([$token, $row['id'], $row['uuid'], $row['permission']]);
 setcookie("SSID", $token, time() + 200000, '/', false, true);
-echo "login successfully!!!<br>";
+$output = "login successfully!!!";
 ?>

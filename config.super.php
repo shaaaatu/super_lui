@@ -18,6 +18,7 @@ $service = array(
 	$login = [
 		'login',
 		"gen_token",
+		'logout',
 	];
 
 	$test = [
@@ -90,6 +91,7 @@ $service = array(
 
 		//login API
 		'login' ,
+		'logout',
 		'test_push' ,
 		'test_mail' ,
 		'gen_token' ,

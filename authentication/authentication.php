@@ -1,13 +1,14 @@
 <?php
 class Authentication
 {
+	private static $instance = null;
 	private $db;
 	private $ssid;
 	/* private $data; */
 	private $id;
 	private $permission;
 
-	public function __construct($db, $ssid)
+	private function __construct($db, $ssid)
 	{
 		$this->ssid = $ssid;
 		$this->db = $db;
@@ -15,23 +16,32 @@ class Authentication
 		$this->permission = 51;
 	}
 
+	public static function getInstance($db, $ssid)
+	{
+		if (self::$instance === null)
+			self::$instance = new Authentication($db, $ssid);
+		return (self::$instance);
+	}
+
 	public function authenticate()
 	{
 		global $t;
 
 		$row = $this->getSessionData();
-		/* $this->data = $row; */
 		if ($this->isRowEmpty($row))
-			return false;
+		{
+			$t->log("row empty");
+			return ;
+		}
 		if ($this->isSessionExpired($row['lastused']))
 		{
 			$t->log("session expired");
 			$this->logout($row['id']);
-			return false;
+			return ;
 		}
 		$this->updateLastusedTime($row['id']);
 		$this->permission = $row['users_permission'];
-		return true;
+		return ;
 	}
 
 	private function getSessionData()
@@ -43,6 +53,7 @@ class Authentication
 		if (!$result)
 		{
 			$t->log("SQL failed");
+			outputResult([], $t->logs);
 			exit();
 		}
 		return $result->fetch_assoc();

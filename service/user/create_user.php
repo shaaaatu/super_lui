@@ -35,8 +35,7 @@ function genUuid()
 	return $uuid;
 }
 
-echo "creating user<br>";
-error_log("creating user\n");
+$t->log("creating user");
 
 if (!(isset($request_data->email) && isset($request_data->username) && isset($request_data->password)))
 {
@@ -48,17 +47,17 @@ $username = $request_data->username;
 $password = $request_data->password;
 
 $hash = getHash($password);
-echo "check duplicate<br>";
+$t->log("check duplicate");
 if (checkDuplicateUser($email))
 {
-	echo "duplicate user\(email\))<br>";
+	echo "duplicate user\(email\))";
 	exit();
 }
-echo "not duplicated<br>";
+$t-log("not duplicated");
 $uuid = genUuid();
 
 $sql = 'INSERT INTO users (email, name, password, uuid, permission) VALUES (?, ?, ?, ?, ?)';
 $stmt = $db->prepare($sql);
 $stmt->execute([$email, $username, $hash, $uuid, 1]);
-echo "create user successful <br>";
+$output = "create user successful";
 ?>
